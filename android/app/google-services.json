@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1097061756451",
+    "project_id": "baalgeet-56fd9",
+    "storage_bucket": "baalgeet-56fd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097061756451:android:3d4de97c56c085c16c4b96",
+        "android_client_info": {
+          "package_name": "com.baalgeet.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097061756451-1tjobptr03l7umnn1satu4v2lkhjnros.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.baalgeet.user",
+            "certificate_hash": "9cf7c567e8ef360b8cd19499a86c4fe27796bea3"
+          }
+        },
+        {
+          "client_id": "1097061756451-ifnf5r6rva9qg6c1vc7217s9njc5hc4h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.baalgeet.user",
+            "certificate_hash": "7e3cab5ad8398e5bb6dcc72cfc2c7efc91896b95"
+          }
+        },
+        {
+          "client_id": "1097061756451-6d8b6pi36hg3j8ascpandfveg686e1qo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMqCPh17h3ezjso6sM2zLpDcqAYWRBByk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097061756451-6d8b6pi36hg3j8ascpandfveg686e1qo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1097061756451-10k9mq8eph6ps61bpdv576vjdb9shkv1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mrblab.primelms"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
