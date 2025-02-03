@@ -3,13 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lms_app/configs/app_assets.dart';
 import 'package:lms_app/constants/app_constants.dart';
+import 'package:lms_app/iAP/in_app_purchase.dart';
 import 'package:lms_app/mixins/course_mixin.dart';
 import 'package:lms_app/mixins/user_mixin.dart';
 import 'package:lms_app/models/course.dart';
 import 'package:lms_app/utils/loading_widget.dart';
 import '../../providers/user_data_provider.dart';
+import 'dart:async';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 final _isLoadingEnrollmentProvider = StateProvider.autoDispose((ref) => false);
+InAppPurchase _inAppPurchase = InAppPurchase.instance;
+late StreamSubscription<dynamic> _streamSubscription;
+List<ProductDetails> _products = [];
+const _variant = {"Season1"};
 
 class EnrollButton extends ConsumerWidget with UserMixin {
   EnrollButton({super.key, required this.course});
@@ -21,7 +28,7 @@ class EnrollButton extends ConsumerWidget with UserMixin {
     final user = ref.watch(userDataProvider);
     final bool isLoading = ref.watch(_isLoadingEnrollmentProvider);
     final String text = CourseMixin.enrollButtonText(course, user);
-    final bool isPremium = course.priceStatus == priceStatus.keys.first ? false : true;
+    final bool isPremium = course.priceStatus != priceStatus.keys.first;
 
     return BottomAppBar(
       padding: const EdgeInsets.all(0),
@@ -62,7 +69,19 @@ class EnrollButton extends ConsumerWidget with UserMixin {
                         ).tr(),
                   onPressed: () async {
                     ref.read(_isLoadingEnrollmentProvider.notifier).state = true;
-                    await handleEnrollment(context, user: user, course: course, ref: ref);
+
+                    // Initialize the store and wait until products are fetched
+                    await initStore();
+
+                    if (_products.isNotEmpty) {
+                      final PurchaseParam param = PurchaseParam(productDetails: _products[0]);
+                      _inAppPurchase.buyConsumable(purchaseParam: param);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("No products available for purchase")),
+                      );
+                    }
+                    
                     ref.read(_isLoadingEnrollmentProvider.notifier).state = false;
                   },
                 ),
@@ -110,5 +129,26 @@ class _PremiumTag extends StatelessWidget {
       ),
       child: Image.asset(premiumImage, fit: BoxFit.contain),
     );
+  }
+}
+
+void _listenToPurchase(List<PurchaseDetails> purchaseDetailsList, BuildContext context) {
+  for (var purchaseDetails in purchaseDetailsList) {
+    if (purchaseDetails.status == PurchaseStatus.pending) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Pending")));
+    } else if (purchaseDetails.status == PurchaseStatus.error) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error")));
+    } else if (purchaseDetails.status == PurchaseStatus.purchased) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Purchased")));
+    }
+  }
+}
+
+Future<void> initStore() async {
+  final ProductDetailsResponse productDetailsResponse =
+      await _inAppPurchase.queryProductDetails(_variant);
+
+  if (productDetailsResponse.error == null && productDetailsResponse.productDetails.isNotEmpty) {
+    _products = productDetailsResponse.productDetails;
   }
 }

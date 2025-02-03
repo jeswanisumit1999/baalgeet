@@ -127,6 +127,31 @@ mixin UserMixin {
     }
   }
 
+// Handle Enrollment Function
+Future<void> handleEnrollmentnew(BuildContext context, {
+    required UserModel? user,
+    required Course course,
+    required WidgetRef ref,
+  }) async {
+  try {
+    // Simulate an API call or backend process to enroll the user
+    await Future.delayed(Duration(seconds: 2)); // Replace with actual enrollment logic
+
+    // Update user's enrollment status in your backend or local state
+    // Example: ref.read(userDataProvider.notifier).enrollInCourse(course.id);
+
+    // Show success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('You are now enrolled in the course.')),
+    );
+  } catch (e) {
+    // Handle errors
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to enroll: ${e.toString()}')),
+    );
+  }
+}
+
 Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     // Do something when payment succeeds
     
